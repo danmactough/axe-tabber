@@ -1,0 +1,15 @@
+[package]
+name = "axe-tabber-core"
+version = "0.1.0"
+description = "Settings storage and recording handling for axe-tabber"
+authors = ["Dan MacTough"]
+edition = "2024"
+rust-version = "1.90"
+
+# Deliberately free of Tauri. The integration tests only exercise this crate, so keeping the
+# GUI stack out of its dependency graph is what makes `cargo test` cheap.
+
+[dependencies]
+serde = { version = "1.0", features = ["derive"] }
+rusqlite = { version = "0.37", features = ["bundled"] }
+anyhow = "1"

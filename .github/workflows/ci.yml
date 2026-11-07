@@ -1,0 +1,77 @@
+name: Test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # CI never attaches a debugger, so full debuginfo only costs compile time, runner disk and
+  # cache upload size. Set here rather than in Cargo.toml so a local `cargo test` keeps it.
+  CARGO_PROFILE_TEST_DEBUG: 0
+
+jobs:
+  # Everything that does not need the Tauri GUI stack: the core crate and the frontend lint.
+  # axe-tabber-core has no tauri dependency, so this job installs no GTK/WebKit packages.
+  core:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri
+          # rustc's version hash and the runner image's environment are otherwise part of the
+          # cache key, so every `stable` release and every image update threw the cache away.
+          # A key change only forces a recompile, which is what the cache was there to avoid.
+          add-rust-environment-hash-key: false
+
+      - run: npm ci
+
+      - run: npm run lint
+
+      - run: cargo test --manifest-path src-tauri/Cargo.toml -p axe-tabber-core
+
+  # The command layer in src-tauri/src. Only these tests link GTK/WebKit, so they run in their
+  # own job and cannot hold up the signal from `core`.
+  app:
+    # The Tauri crate links GTK/WebKit, so cargo needs the Linux dev packages even though
+    # the app itself only ships for macOS.
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Tauri build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libwebkit2gtk-4.1-dev \
+            libjavascriptcoregtk-4.1-dev \
+            libsoup-3.0-dev \
+            libgtk-3-dev \
+            libayatana-appindicator3-dev \
+            librsvg2-dev \
+            libxdo-dev \
+            libssl-dev
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri
+          add-rust-environment-hash-key: false
+
+      - run: cargo test --manifest-path src-tauri/Cargo.toml -p axe-tabber

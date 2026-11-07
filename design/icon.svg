@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#25272c"/>
+      <stop offset="1" stop-color="#121315"/>
+    </linearGradient>
+    <linearGradient id="sheen" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.10"/>
+      <stop offset="0.5" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect x="100" y="100" width="824" height="824" rx="186" fill="url(#bg)"/>
+  <rect x="100" y="100" width="824" height="824" rx="186" fill="url(#sheen)"/>
+  <rect x="101" y="101" width="822" height="822" rx="185" fill="none" stroke="#ffffff" stroke-opacity="0.08" stroke-width="2"/>
+  <!-- Six strings of a tab staff -->
+  <g stroke="#e8e6e1" stroke-width="10" stroke-linecap="round">
+    <line x1="232" y1="322" x2="792" y2="322" stroke-opacity="0.35"/>
+    <line x1="232" y1="398" x2="792" y2="398" stroke-opacity="0.42"/>
+    <line x1="232" y1="474" x2="792" y2="474" stroke-opacity="0.50"/>
+    <line x1="232" y1="550" x2="792" y2="550" stroke-opacity="0.58"/>
+    <line x1="232" y1="626" x2="792" y2="626" stroke-opacity="0.66"/>
+    <line x1="232" y1="702" x2="792" y2="702" stroke-opacity="0.74"/>
+  </g>
+  <!-- Fret numbers sitting on the strings -->
+  <g font-family="Menlo, monospace" font-weight="700" font-size="92" text-anchor="middle" dominant-baseline="central">
+    <rect x="314" y="424" width="92" height="100" rx="18" fill="#1a1b1f"/>
+    <text x="360" y="477" fill="#e58a5c">3</text>
+    <rect x="466" y="576" width="92" height="100" rx="18" fill="#1a1b1f"/>
+    <text x="512" y="629" fill="#6fa9e8">5</text>
+    <rect x="618" y="348" width="92" height="100" rx="18" fill="#1a1b1f"/>
+    <text x="664" y="401" fill="#a98cf0">7</text>
+  </g>
+</svg>
